@@ -6,10 +6,18 @@ var theDate = new Date(),
     date = theDate.getDate();
     var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-    var saveBtn = $('#save-btn');
+    var saveBtn = $('#save-btn')[0];
 //empty array for local storage 
 var textArea = $('.text-area');
-var events = []; 
+var eventSet = [{
+    times: 9,
+    textInput: '',
+},
+{
+    times: 10,
+    textInput: '',
+}]
+
 
 $(document).ready(function(){
 // code to concatenate day of the week, month, and date. 
@@ -40,24 +48,54 @@ $(".text-area").each( function(){
      if ($(this).attr('data-id') > hour) {
         $(this).addClass('future');
     }
+    
 });
 
 
-function renderEvents() {
-for (var i = 0; i < todos.length; i++) {
-    var todo = todos[i];
-    }
-}; 
-// Stringify and set "events" key in localStorage to todos array 
-function storeEvent() {
-    localStorage.setItem('eventInput', JSON.stringify(events));
+//render event list 
+function renderEvents () {
+    for (var i = 0; i < eventSet.length; i++ ) {
+    eventList = eventSet[i];
+    textArea.val() = eventList;
+}
 }
 
-//Saves text to local storage on click 
-$('saveBtn').on('click', function(){
-    storeEvent()
+
+// Stringify and set "events" key in localStorage to todos array 
+function storedEvents() {
+    var eventText = JSON.parse(localStorage.getItem("events"));
+    
+    if (!eventText) {
+        return;
+      }
+     else {eventSet = eventText;
+    }
+
+  }
+
+
+
+   
+
+//Saves text to local storage on click
+$('.saveBtn').on('click', function() {
+
+    var text = textArea.val();
+    var time = $(this).attr('data-id');
+    
+
+    for (var i = 0; i < eventSet.length; i++ ) {
+        if (eventSet[i].times == time){
+            eventSet[i].textInput = text;
+        }
+    }
+    
+    localStorage.setItem("events", JSON.stringify(eventSet));
 
 }); 
+
+storedEvents()
+
 
 
 }); 
