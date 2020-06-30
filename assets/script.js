@@ -9,14 +9,7 @@ var theDate = new Date(),
     var saveBtn = $('#save-btn')[0];
 //empty array for local storage 
 var textArea = $('.text-area');
-var eventSet = [{
-    times: 9,
-    textInput: '',
-},
-{
-    times: 10,
-    textInput: '',
-}]
+var eventSet = []
 
 
 $(document).ready(function(){
@@ -55,11 +48,9 @@ $(".text-area").each( function(){
 //render event list 
 function renderEvents () {
     for (var i = 0; i < eventSet.length; i++ ) {
-    eventList = eventSet[i];
-    textArea.val() = eventList;
+    $('textarea[data-id ="'+eventSet[i].times+'"]').val(eventSet[i].textInput)
 }
 }
-
 
 // Stringify and set "events" key in localStorage to todos array 
 function storedEvents() {
@@ -72,31 +63,38 @@ function storedEvents() {
     }
 
   }
-
-
-
-   
+ 
 
 //Saves text to local storage on click
 $('.saveBtn').on('click', function() {
 
-    var text = textArea.val();
+    var text = $(this).parent().children('textarea').val();
+    console.log(text);
     var time = $(this).attr('data-id');
     
+    var arraySet = false 
 
     for (var i = 0; i < eventSet.length; i++ ) {
         if (eventSet[i].times == time){
             eventSet[i].textInput = text;
-        }
+            arraySet = true;
+        } 
+        
     }
-    
+    if(!arraySet) {
+        eventSet.push({
+            times: time,
+            textInput: text
+        });
+    };
+
     localStorage.setItem("events", JSON.stringify(eventSet));
 
 }); 
 
 storedEvents()
 
-
+renderEvents()
 
 }); 
 
